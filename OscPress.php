@@ -43,6 +43,11 @@ class OscPress{
         add_action('init',array($this,'init'));
     }
 
+    private function random_float($min = 0, $max = 1) {
+        return $min + mt_rand() / mt_getrandmax() * ($max - $min);
+    }
+
+
 
     public function init() {
         //时钟
@@ -51,11 +56,12 @@ class OscPress{
                 $settings = $this->_get_oscpress_settings();
                 if($settings['clock']){
                     $timestamp = current_time( 'timestamp' );
-                    $content = '';
+                    $dangs = '';
                     for($i=0;$i<date('g',$timestamp);$i++){
-                        $content .='铛...';
+                        $dangs .='铛...';
                     }
-                    $content .= ' 现在是北京时间 '. date('H:00',$timestamp) .' #敬请对时#';
+                    $direction = rand(0,10) > 5 ? '' :'-';
+                    $content = sprintf('%s 现在是北京时间 %s, #世界线变动率# %s%0.6f%%',$dangs, date('Y-m-d H:00',$timestamp), $direction, $this->random_float(0,1) );
 
                     $this->_send_tweet($content);
                 }
@@ -64,6 +70,7 @@ class OscPress{
         }
 
     }
+
 
     public function admin_menu() {
         add_options_page('OscPress','OscPress','manage_options',"oscpress_admin_settings",array($this,'admin_setting'));
