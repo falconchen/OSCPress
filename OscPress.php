@@ -36,11 +36,34 @@ class OscPress{
 
         add_action('publish_post', array($this,'publish_post'),10,2); // 发布一般文章时执行
 
+        add_action('publish_page', array($this,'publish_post'),10,2); // 发布page时执行
+
         add_action( 'add_meta_boxes', array($this,'add_meta_boxes') );
 
-
+        add_action('init',array($this,'init'));
     }
 
+
+    public function init() {
+        //时钟
+        if(isset($_GET['osc_action'])) {
+            if($_GET['osc_action']=='clock') {
+                $settings = $this->_get_oscpress_settings();
+                if($settings['clock']){
+                    $timestamp = current_time( 'timestamp' );
+                    $content = '';
+                    for($i=0;$i<date('g',$timestamp);$i++){
+                        $content .='铛...';
+                    }
+                    $content .= ' 现在是北京时间 '. date('H:00',$timestamp) .' #敬请对时#';
+
+                    $this->_send_tweet($content);
+                }
+            }
+            exit;
+        }
+
+    }
 
     public function admin_menu() {
         add_options_page('OscPress','OscPress','manage_options',"oscpress_admin_settings",array($this,'admin_setting'));
@@ -108,6 +131,13 @@ class OscPress{
             "field" =>"display_link_image_in_div", "label"=>"div包裹显示链接图片",
             "description" => '修正同步到osc上的图片排版问题'
         ));
+
+        add_settings_field('clock', '报时动弹', array($this,'checkbox'),'oscpress','oscpress_settings',array(
+            "field" =>"clock", "label"=>"报时动弹",
+            "description" => '报时动弹'
+        ));
+
+
 
     }
 
