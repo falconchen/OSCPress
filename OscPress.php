@@ -61,7 +61,7 @@ class OscPress{
                         $dangs .='铛...';
                     }
                     $direction = rand(0,10) > 5 ? '' :'-';
-                    $content = sprintf('%s 现在是北京时间 %s, #世界线变动率# %s%0.6f%%',$dangs, date('Y-m-d H:00',$timestamp), $direction, $this->random_float(0,1) );
+                    $content = sprintf('%s 现在是北京时间 %s, #世界线变动率# %s%0.6f%%',$dangs, date('Y-m-d H:00',$timestamp), $direction, $this->random_float(0,2) );
 
                     $this->_send_tweet($content);
                 }
